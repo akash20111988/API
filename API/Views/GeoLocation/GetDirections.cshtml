@@ -1,0 +1,105 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetDirections</title>
+</head>
+<body>
+    <div class="container">
+        <div class="col-md-12">
+            <div class="col-md-6">From : <input type="text" id="FromLocation" /></div>
+            <div class="col-md-6">To : <input type="text" id="ToLocation" /></div>
+            <div class="col-md-12"><button id="GetDirections">Get Directions</button></div>
+        </div>
+
+        <div id="map-canvas" style="width: 500px; height: 500px" class="col-md-12">
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBOdd46f3jG_YUE4g0-Nqi4u7Tkj8pDZ4Q&sensor=false"></script>
+    <script type="text/javascript">
+        function initMap(Fromlat, Fromlng, Tolat, Tolng) {
+            var pointA = new google.maps.LatLng(Fromlat, Fromlng),
+                pointB = new google.maps.LatLng(Tolat, Tolng),
+                myOptions = {
+                    zoom: 7,
+                    center: pointA
+                },
+                map = new google.maps.Map(document.getElementById('map-canvas'), myOptions),
+                // Instantiate a directions service.
+                directionsService = new google.maps.DirectionsService,
+                directionsDisplay = new google.maps.DirectionsRenderer({
+                    map: map
+                }),
+                markerA = new google.maps.Marker({
+                    position: pointA,
+                    title: "point A",
+                    label: "A",
+                    map: map
+                }),
+                markerB = new google.maps.Marker({
+                    position: pointB,
+                    title: "point B",
+                    label: "B",
+                    map: map
+                });
+
+            // get route from A to B
+            calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
+
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
+            directionsService.route({
+                origin: pointA,
+                destination: pointB,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        $('#GetDirections').on('click', function () {
+            var geocoder = new google.maps.Geocoder();
+            var address;
+            var Fromlat;
+            var Fromlng;
+            var Tolat;
+            var Tolng;
+
+            address = $('#FromLocation').val();
+            geocoder.geocode({ 'address': address }, function (results, status) {
+
+                if (status == google.maps.GeocoderStatus.OK) {
+                    Fromlat = results[0].geometry.location.lat();
+                    Fromlng = results[0].geometry.location.lng();
+                }
+            });
+
+            address = $('#ToLocation').val();
+            geocoder.geocode({ 'address': address }, function (results, status) {
+
+                if (status == google.maps.GeocoderStatus.OK) {
+                    Tolat = results[0].geometry.location.lat();
+                    Tolng = results[0].geometry.location.lng();
+                    initMap(Fromlat, Fromlng, Tolat, Tolng);
+                }
+            });            
+        });
+
+        
+        
+    </script>
+</body>
+</html>
