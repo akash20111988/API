@@ -8,15 +8,34 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <title>Index</title>    
 </head>
 <body>
     <div class="container"> 
         <div class="col-md-12">
-            <label class="col-md-3">Weather outside is </label>
-            <label class="col-md-3">14 C </label>
+            <input type="text" class="col-md-3" id="city"/>
+            <button class="col-md-3" id="btnClick">Click to get weather</button>
+            <label class="col-md-3" style="display:none;" id="location"></label>
+            <label id="weather" class="col-md-3"></label>
         </div>
     </div>
+        
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+    <script>
+        $('#btnClick').on('click', function () {
+            $.ajax({
+                url: "http://api.apixu.com/v1/current.json?key=f06e7c46c24144a5ae4104358170505&q=" + $('#city').val(),
+                data: "",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                type: "Get",
+                success: function (data) {                    
+                    $('#location').show();
+                    $('#location').text("Weather in " + $('#city').val() + " is ");
+                    $('#weather').text(data.current.temp_c + " C");
+                }
+            });
+        });
+    </script>
 </body>
 </html>

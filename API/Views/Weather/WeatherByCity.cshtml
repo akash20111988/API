@@ -1,0 +1,23 @@
+﻿@model API.Models.WeatherModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WeatherByCity</title>
+</head>
+<body>
+    <div>
+        <h4>WeatherModel</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            Temperature in @Model.location.name is @Model.current.temp_c C/@Model.current.temp_f F
+        </dl>
+    </div>
+</body>
+</html>
